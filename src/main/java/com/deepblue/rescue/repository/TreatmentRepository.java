@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface TreatmentRepository extends JpaRepository<Treatment, Long> {
 
+	List<Treatment> findByAnimalAnimalCodeOrderByPerformedAtAsc(String animalCode);
+
     List<Treatment> findByAnimalIdOrderByPerformedAtAsc(Long animalId);
 
     @Query("""
