@@ -43,64 +43,64 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(error);
     }
 
-            @ExceptionHandler(MethodArgumentNotValidException.class)
-            public ResponseEntity<ErrorResponse> handleValidation(
-                MethodArgumentNotValidException ex) {
-            Map<String, String> details = ex.getBindingResult()
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidation(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> details = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .collect(Collectors.toMap(
-                    FieldError::getField,
-                    FieldError::getDefaultMessage,
-                    (first, second) -> first));
-            HttpStatus status = HttpStatus.BAD_REQUEST;
-            ErrorResponse error = new ErrorResponse(
+                        FieldError::getField,
+                        FieldError::getDefaultMessage,
+                        (first, second) -> first));
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
                 status.value(),
                 status.getReasonPhrase(),
                 "Request validation failed",
                 details);
-            return ResponseEntity.status(status).body(error);
-            }
+        return ResponseEntity.status(status).body(error);
+    }
 
-            @ExceptionHandler(HttpMessageNotReadableException.class)
-            public ResponseEntity<ErrorResponse> handleMessageNotReadable(
-                HttpMessageNotReadableException ex) {
-            HttpStatus status = HttpStatus.BAD_REQUEST;
-            ErrorResponse error = new ErrorResponse(
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleMessageNotReadable(
+            HttpMessageNotReadableException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
                 status.value(),
                 status.getReasonPhrase(),
                 "Malformed or invalid JSON request",
                 Map.of("body", "Check JSON syntax and enum values"));
-            return ResponseEntity.status(status).body(error);
-            }
+        return ResponseEntity.status(status).body(error);
+    }
 
-            @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-            public ResponseEntity<ErrorResponse> handleTypeMismatch(
-                MethodArgumentTypeMismatchException ex) {
-            HttpStatus status = HttpStatus.BAD_REQUEST;
-            Map<String, String> details = Map.of(
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(
+            MethodArgumentTypeMismatchException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        Map<String, String> details = Map.of(
                 ex.getName(), "Invalid value: " + String.valueOf(ex.getValue()));
-            ErrorResponse error = new ErrorResponse(
+        ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
                 status.value(),
                 status.getReasonPhrase(),
                 "Invalid request parameter",
                 details);
-            return ResponseEntity.status(status).body(error);
-            }
+        return ResponseEntity.status(status).body(error);
+    }
 
-            @ExceptionHandler(Exception.class)
-            public ResponseEntity<ErrorResponse> handleUnexpectedException(
-                Exception ex) {
-            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-            ErrorResponse error = new ErrorResponse(
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleUnexpectedException(
+            Exception ex) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
                 status.value(),
                 status.getReasonPhrase(),
                 "An unexpected error occurred",
                 Map.of());
-            return ResponseEntity.status(status).body(error);
-            }
+        return ResponseEntity.status(status).body(error);
+    }
 }
